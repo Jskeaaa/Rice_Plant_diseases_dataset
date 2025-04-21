@@ -4,9 +4,6 @@ from torchvision.models import resnet50
 import torch.nn.functional as F
 
 class Bottleneck(nn.Module):
-    """
-    残差块: ResNet的基本构建块
-    """
     expansion = 4
 
     def __init__(self, inplanes, planes, stride=1, downsample=None):
@@ -45,11 +42,6 @@ class Bottleneck(nn.Module):
         return out
 
 class ResNet59(nn.Module):
-    """
-    ResNet-59模型实现
-    
-    基于ResNet-50，添加3个额外的残差块，达到59层
-    """
     def __init__(self, num_classes=3):
         super(ResNet59, self).__init__()
         # 加载预训练的ResNet-50模型
@@ -64,10 +56,8 @@ class ResNet59(nn.Module):
         self.layer2 = resnet.layer2
         self.layer3 = resnet.layer3
         self.layer4 = resnet.layer4
-        
-        # 添加3个额外的残差块，达到59层
-        # 新增层使用与layer4相同的通道数
-        inplanes = 2048  # layer4输出通道数
+
+        inplanes = 2048
         self.extra_layers = nn.Sequential(
             Bottleneck(inplanes, 512, downsample=None),
             Bottleneck(inplanes, 512, downsample=None),
@@ -112,32 +102,11 @@ class ResNet59(nn.Module):
         return x
 
 def get_model(num_classes=3, pretrained=True):
-    """
-    创建并返回ResNet-59模型实例
-    
-    参数:
-        num_classes (int): 分类类别数
-        pretrained (bool): 是否使用预训练权重
-        
-    返回:
-        model (nn.Module): ResNet-59模型实例
-    """
     model = ResNet59(num_classes=num_classes)
     
     return model
 
 def load_model(model_path, num_classes=3, device=None):
-    """
-    加载保存的模型
-    
-    参数:
-        model_path (str): 模型权重文件路径
-        num_classes (int): 分类类别数
-        device (torch.device): 设备 (CPU/GPU)
-        
-    返回:
-        model (nn.Module): 加载了权重的模型
-    """
     if device is None:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -149,15 +118,6 @@ def load_model(model_path, num_classes=3, device=None):
 
 # 计算模型层数
 def count_layers(model):
-    """
-    计算模型的总层数（包括卷积层、全连接层和批归一化层）
-    
-    参数:
-        model (nn.Module): PyTorch模型
-        
-    返回:
-        total_layers (int): 模型总层数
-    """
     total_layers = 0
     for _, module in model.named_modules():
         if isinstance(module, (nn.Conv2d, nn.Linear, nn.BatchNorm2d)):

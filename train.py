@@ -8,18 +8,17 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from tqdm import tqdm
 import numpy as np
 
-# 设置CUDA相关配置
 if torch.cuda.is_available():
-    # 设置CUDA版本
+
     print(f"PyTorch版本: {torch.__version__}")
     print(f"CUDA版本: {torch.version.cuda}")
     print(f"当前GPU: {torch.cuda.get_device_name(0)}")
     
     # 优化CUDA性能
-    torch.backends.cudnn.benchmark = True  # 启用cudnn基准测试
-    torch.backends.cudnn.deterministic = True  # 确保可重复性
-    torch.backends.cudnn.enabled = True  # 启用cudnn
-    torch.cuda.set_device(0)  # 设置默认GPU设备
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.enabled = True
+    torch.cuda.set_device(0)
     
     # 设置内存分配器
     torch.cuda.empty_cache()  # 清空缓存

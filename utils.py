@@ -197,17 +197,6 @@ def visualize_predictions(model, test_loader, class_names, device, num_images=6,
 
 # Grad-CAM 可视化
 def visualize_model_attention(model, img_path, class_names, transform, target_layer_name='layer4', device=None):
-    """
-    使用Grad-CAM可视化模型关注的区域
-    
-    参数:
-        model: 训练好的模型
-        img_path: 输入图像路径
-        class_names: 类别名称列表
-        transform: 用于预处理图像的变换
-        target_layer_name: 目标层名称
-        device: 设备(CPU/GPU)
-    """
     if device is None:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -289,15 +278,6 @@ def visualize_model_attention(model, img_path, class_names, transform, target_la
 
 # 调整学习率的辅助函数
 def adjust_learning_rate(optimizer, epoch, initial_lr, lr_schedule):
-    """
-    根据学习率调度策略调整学习率
-    
-    参数:
-        optimizer: 优化器
-        epoch: 当前轮次
-        initial_lr: 初始学习率
-        lr_schedule: 学习率调度策略，例如 {'type': 'step', 'steps': [30, 60], 'gamma': 0.1}
-    """
     lr = initial_lr
     if lr_schedule['type'] == 'step':
         for milestone in lr_schedule['steps']:
@@ -316,17 +296,6 @@ def adjust_learning_rate(optimizer, epoch, initial_lr, lr_schedule):
 
 # 判断是否应该提前停止训练
 def early_stopping(val_losses, patience=5, delta=0):
-    """
-    实现早停策略
-    
-    参数:
-        val_losses: 验证损失历史列表
-        patience: 容忍验证损失不下降的轮次
-        delta: 最小变化阈值
-        
-    返回:
-        bool: 是否应该停止训练
-    """
     if len(val_losses) <= patience:
         return False
     
